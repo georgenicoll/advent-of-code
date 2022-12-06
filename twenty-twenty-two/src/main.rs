@@ -5,6 +5,7 @@ mod two;
 mod three;
 mod four;
 mod five;
+mod six;
 
 fn main() {
     sandbox::entry_point();
@@ -18,4 +19,6 @@ fn main() {
     println!("4b Result is: {}", four::_4b().unwrap());
     println!("5a Result is: {}", five::_5a().unwrap());
     println!("5b Result is: {}", five::_5b().unwrap());
+    println!("6a Result is: {}", six::_6a().unwrap());
+    println!("6b Result is: {}", six::_6b().unwrap());
 }
