@@ -32,7 +32,7 @@ enum Line {
     Empty,
     Crates { crates_by_row: HashMap<usize, char>, },
     Rows { rows: Vec<usize>, },
-    Move { num: u8, from: usize, to: usize, }
+    Move { num: usize, from: usize, to: usize, }
 }
 
 struct CrateStacks {
@@ -115,11 +115,12 @@ fn accumulate1(crate_stacks: CrateStacks, line: Line) -> CrateStacks {
     accumulate_gen(crate_stacks, line, move1)
 }
 
-fn move1(mut crate_stacks: CrateStacks, num: u8, from: usize, to: usize) -> CrateStacks {
-    for _ in 0..num {
-        let crate_id = crate_stacks.stacks.get_mut(&from).unwrap().pop().unwrap();
-        crate_stacks.stacks.get_mut(&to).unwrap().push(crate_id);
-    }
+fn move1(mut crate_stacks: CrateStacks, num: usize, from: usize, to: usize) -> CrateStacks {
+    let mut items = {
+        let from_stack = crate_stacks.stacks.get_mut(&from).unwrap();
+        Vec::from_iter(from_stack.drain((from_stack.len() - num)..).rev())
+    };
+    crate_stacks.stacks.get_mut(&to).unwrap().  append(&mut items);
     crate_stacks
 }
 
@@ -127,22 +128,18 @@ fn accumulate2(crate_stacks: CrateStacks, line: Line) -> CrateStacks {
     accumulate_gen(crate_stacks, line, move2)
 }
 
-fn move2(mut crate_stacks: CrateStacks, num: u8, from: usize, to: usize) -> CrateStacks {
-    let mut crates: Vec<char> = Vec::new();
-    for _ in 0..num {
-        let crate_id = crate_stacks.stacks.get_mut(&from).unwrap().pop().unwrap();
-        crates.push(crate_id);
-    }
-    crates.reverse();
-    for crate_id in crates.iter() {
-        crate_stacks.stacks.get_mut(&to).unwrap().push(*crate_id);
-    }
+fn move2(mut crate_stacks: CrateStacks, num: usize, from: usize, to: usize) -> CrateStacks {
+    let mut items = {
+        let from_stack = crate_stacks.stacks.get_mut(&from).unwrap();
+        Vec::from_iter(from_stack.drain((from_stack.len() - num)..))
+    };
+    crate_stacks.stacks.get_mut(&to).unwrap().append(&mut items);
     crate_stacks
 }
 
 fn accumulate_gen(mut crate_stacks: CrateStacks,
                   line: Line,
-                  move_func: fn (CrateStacks, u8, usize, usize) -> CrateStacks) -> CrateStacks {
+                  move_func: fn (CrateStacks, usize, usize, usize) -> CrateStacks) -> CrateStacks {
     match line {
         Line::Empty => {
             for (_, stack) in crate_stacks.stacks.iter_mut() {
