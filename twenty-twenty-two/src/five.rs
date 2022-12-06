@@ -173,13 +173,11 @@ fn accumulate_gen(mut crate_stacks: CrateStacks,
 }
 
 fn reduce(crate_stacks: CrateStacks) -> String {
-    let mut res = String::new();
-    for (_, stack) in crate_stacks.stacks.iter() {
+    crate_stacks.stacks.values().map(|stack| {
         match stack.last() {
-            Some(c) => res.push(*c),
-            None => res.push(' '),
+            Some(c) => *c,
+            None => ' '
         }
-    };
-    res
+    }).collect::<String>()
 }
 
