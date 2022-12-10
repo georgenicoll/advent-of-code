@@ -53,23 +53,25 @@ impl Signal {
 }
 
 fn accumulator(mut signal: Signal, instruction: Option<Instruction>) -> Signal {
-    maybe_sample_value(&mut signal);
-    output_pixel(&signal);
     match instruction {
         Some(Instruction::Noop) => {
-            signal.cycle += 1;
+            next_cycle(&mut signal);
             signal
         },
         Some(Instruction::AddX { value }) => {
-            signal.cycle += 1;
-            maybe_sample_value(&mut signal);
-            output_pixel(&signal);
-            signal.cycle += 1;
+            next_cycle(&mut signal);
+            next_cycle(&mut signal);
             signal.x += value;
             signal
         },
         _ => signal,
     }
+}
+
+fn next_cycle(signal: &mut Signal) {
+    maybe_sample_value(signal);
+    output_pixel(&signal);
+    signal.cycle += 1;
 }
 
 fn maybe_sample_value(signal: &mut Signal) {
