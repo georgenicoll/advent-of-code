@@ -1,3 +1,4 @@
+#![feature(get_many_mut)]
 mod sandbox;
 mod utils;
 mod one;
@@ -6,8 +7,11 @@ mod three;
 mod four;
 mod five;
 mod six;
+mod seven;
+mod eight;
+mod nine;
 
-fn main() {
+pub fn old() {
     sandbox::entry_point();
     println!("1a Result is: {}", one::_1a().unwrap());
     println!("1b Result is: {}", one::_1b().unwrap());
@@ -21,4 +25,15 @@ fn main() {
     println!("5b Result is: {}", five::_5b().unwrap());
     println!("6a Result is: {}", six::_6a().unwrap());
     println!("6b Result is: {}", six::_6b().unwrap());
+    println!("7a Result is: {}", seven::_7a().unwrap());
+    println!("7b Result is: {}", seven::_7b().unwrap());
+    println!("8a Result is: {}", eight::_8a().unwrap());
+    println!("8a Result is: {}", eight::_8b().unwrap());
 }
+
+fn main() {
+    println!("9a Result is: {}", nine::_9a().unwrap());
+    println!("9b Result is: {}", nine::_9b().unwrap());
+}
+
+
