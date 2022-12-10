@@ -96,9 +96,9 @@ fn perform_moves(mut state: State, num: u8, horz_move: i16, vert_move: i16) -> S
     for _ in 0..num {
         apply_move_to_first(&mut state, horz_move, vert_move);
 
-        let moved = apply_moves_to_chain(&mut state);
+        let last_moved = apply_moves_to_chain(&mut state);
 
-        if moved {
+        if last_moved {
             let last = state.positions.last().unwrap();
             state.visited_positions.insert(Position { x: last.x, y: last.y });
         }
