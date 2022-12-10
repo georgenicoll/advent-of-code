@@ -41,12 +41,12 @@ struct Signal {
 }
 
 impl Signal {
-    pub fn new(interesting_signals: HashSet<i64>) -> Signal {
-        let len = interesting_signals.len();
+    pub fn new(interesting_cycles: HashSet<i64>) -> Signal {
+        let len = interesting_cycles.len();
         Signal {
             x: 1,
             cycle: 1,
-            interesting_cycles: interesting_signals,
+            interesting_cycles: interesting_cycles,
             sampled_values: Vec::with_capacity(len),
         }
     }
