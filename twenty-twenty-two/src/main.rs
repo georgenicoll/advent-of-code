@@ -1,4 +1,5 @@
 #![feature(get_many_mut)]
+#![feature(once_cell)]
 mod sandbox;
 mod utils;
 mod one;

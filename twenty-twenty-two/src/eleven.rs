@@ -8,8 +8,8 @@ use crate::utils::process_file;
 
 const FILENAME: &str = "11/input.txt";
 
-// type WorryLevel = BigUint;
-//type WorryLevel = u64;
+// type WorryLevel = u128;
+// type WorryLevel = u64;
 type WorryLevel = usize;
 
 pub fn _11a() -> Result<WorryLevel, Error> {
@@ -264,7 +264,9 @@ fn calculate_monkey_business(mut state: State, num_rounds: usize, worry_level_po
 
     //work out what we can use to mod any value we keep - we can take the mod as each of our divisors multiplied together.
     //and still keep the true/false modulo semantics
-    let mod_worry_level: WorryLevel = state.monkeys.values().map(|monkey| monkey.test_divisor).fold(1, |acc, divisor| acc * divisor);
+    let mod_worry_level: WorryLevel = state.monkeys.values()
+        .map(|monkey| monkey.test_divisor)
+        .fold(1, |acc, divisor| acc * divisor);
 
     //now run the monkey business...
     state = perform_rounds(state, num_rounds, worry_level_post_inspection_divisor, mod_worry_level);
