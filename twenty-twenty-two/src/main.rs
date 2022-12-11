@@ -11,6 +11,7 @@ mod seven;
 mod eight;
 mod nine;
 mod ten;
+mod eleven;
 
 pub fn old() {
     sandbox::entry_point();
@@ -32,10 +33,12 @@ pub fn old() {
     println!("8a Result is: {}", eight::_8b().unwrap());
     println!("9a Result is: {}", nine::_9a().unwrap());
     println!("9b Result is: {}", nine::_9b().unwrap());
+    println!("10a Result is: {}", ten::_10a_and_10b().unwrap());
 }
 
 fn main() {
-    println!("10a Result is: {}", ten::_10a_and_10b().unwrap());
+    println!("11a Result is: {}", eleven::_11a().unwrap());
+    println!("11b Result is: {}", eleven::_11b().unwrap());
 }
 
 
