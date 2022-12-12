@@ -107,26 +107,6 @@ fn find_shortest_path1(map: Map) -> PathLength {
         |_, _, _| {}
     );
 
-    // //perform a BFS
-    // let mut visited_distances: HashMap<Pos, PathLength> = HashMap::new();
-    // let mut to_visit: Vec<PosToVisit> = Vec::new();
-    // to_visit.push(PosToVisit { pos: map.start_pos.unwrap(), distance: 0 });
-
-    // while !to_visit.is_empty() {
-    //     let next_to_visit = to_visit.pop().unwrap();
-    //     //did we already visit in the same or fewer?
-    //     let already_visited_length = visited_distances.get(&next_to_visit.pos);
-    //     if already_visited_length.is_some() && *already_visited_length.unwrap() <= next_to_visit.distance {
-    //         continue;
-    //     }
-    //     visited_distances.insert(next_to_visit.pos, next_to_visit.distance);
-    //     //now work out where to visit next
-    //     visit_north(&map, &next_to_visit.pos, next_to_visit.distance + 1, &visited_distances, &mut to_visit);
-    //     visit_south(&map, &next_to_visit.pos, next_to_visit.distance + 1, &visited_distances, &mut to_visit);
-    //     visit_east(&map, &next_to_visit.pos, next_to_visit.distance + 1, &visited_distances, &mut to_visit);
-    //     visit_west(&map, &next_to_visit.pos, next_to_visit.distance + 1, &visited_distances, &mut to_visit);
-    // }
-
     let end_pos = map.end_pos.unwrap();
     *visited_distances.get(&end_pos).unwrap()
 }
@@ -147,7 +127,8 @@ fn find_shortest_path2(map: Map) -> PathLength {
     shortest_distance
 }
 
-/// Find the shortest path from the start_pos in the visit direction (1 for upwards, -1 for downwards).
+/// Find the shortest path from the start_pos in the visit direction (1 for upwards, -1 for downwards),
+/// by performing a BFS.
 ///
 /// This will find a path to all navigable positions.
 ///
