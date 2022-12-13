@@ -120,10 +120,7 @@ fn in_right_order(items: &Vec<Item>) -> bool {
     compare_left_and_right(left, right) == Ordering::Less
 }
 
-///Compare the items, returns an integer where:
-/// result < 0, left is less than right
-/// result = 0, left is equal to right
-/// result > 0, left is greater than right
+///Compare the items, returns an Ordering
 fn compare_left_and_right(left: &Item, right: &Item) -> Ordering {
     match (left, right) {
         (Item::Val { val: left_val }, Item::Val{ val: right_val }) => {
@@ -201,19 +198,10 @@ fn reduce2(mut state: State) -> usize {
 
     let divider1 = divider1();
     let divider2 = divider2();
-    let mut first_index: Option<usize> = None;
-    let mut second_index: Option<usize> = None;
-    for (index, item) in state.items.iter().enumerate() {
-        let one_based_index = index + 1;
-        if first_index.is_none() && compare_left_and_right(&divider1, item) == Ordering::Equal {
-            first_index = Some(one_based_index);
-            // println!("**first: {}** {}", one_based_index, item);
-        } else if second_index.is_none() && compare_left_and_right(&divider2, item) == Ordering::Equal {
-            second_index = Some(one_based_index);
-            // println!("**second: {}** {}", one_based_index, item);
-        } else {
-            // println!("{}", item);
-        }
-    }
-    first_index.unwrap() * second_index.unwrap()
+
+    let first_index = state.items.binary_search_by(|item| compare_left_and_right(item, &divider1)).unwrap();
+    let second_index = state.items.binary_search_by(|item| compare_left_and_right(item, &divider2)).unwrap();
+
+    //calculation should use 1 based indexes
+    (first_index + 1) * (second_index + 1)
 }
