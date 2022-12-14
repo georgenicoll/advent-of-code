@@ -183,14 +183,14 @@ fn accumulate(mut state: State, links: Vec<Link>) -> State {
 const START_X: Scale = 500;
 const START_Y: Scale = 0;
 
+fn start_pos() -> Pos {
+    Pos::new(START_X, START_Y)
+}
+
 fn reduce1(mut state: State) -> u32 {
     // output_state(&state, "14/reduce1-start-output.txt");
 
     let (_, _, _, escape_y) = calc_bounds(&state);
-
-    fn start_pos() -> Pos {
-        Pos::new(START_X, START_Y)
-    }
 
     let mut pos = start_pos();
     let mut grains_at_rest: u32 = 0;
@@ -220,12 +220,8 @@ fn reduce2(mut state: State) -> u32 {
     // output_state(&state);
 
     let (_, _, _, lowest_rock) = calc_bounds(&state);
+
     let lowest_y = lowest_rock + 1;
-
-    fn start_pos() -> Pos {
-        Pos::new(START_X, START_Y)
-    }
-
     let mut pos = start_pos();
     let mut grains_at_rest: u32 = 0;
     loop {
