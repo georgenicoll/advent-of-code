@@ -236,10 +236,10 @@ fn reduce2(mut state: State) -> u32 {
         if !move_down(&state, &mut pos) {
             if !move_down_left(&state, &mut pos) {
                 if !move_down_right(&state, &mut pos) {
-                    //is source blocked, in which case stop
                     //unable to move - new grain at rest and add a blockage
                     grains_at_rest += 1;
                     state.blockages.insert(pos, Blockage::Sand);
+                    //is source blocked, in which case stop
                     if pos.y == START_Y {
                         break;
                     }
