@@ -1,6 +1,6 @@
-use std::fmt::Display;
+use std::cmp::{max, min};
 use std::collections::HashMap;
-use std::cmp::{min, max};
+use std::fmt::Display;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 
@@ -11,23 +11,11 @@ use crate::utils;
 const FILE_NAME: &str = "14/input.txt";
 
 pub fn _14a() -> Result<u32, std::io::Error> {
-    utils::process_file(
-        FILE_NAME,
-        parse_line,
-        State::new(),
-        accumulate,
-        reduce1
-    )
+    utils::process_file(FILE_NAME, parse_line, State::new(), accumulate, reduce1)
 }
 
 pub fn _14b() -> Result<u32, std::io::Error> {
-    utils::process_file(
-        FILE_NAME,
-        parse_line,
-        State::new(),
-        accumulate,
-        reduce2
-    )
+    utils::process_file(FILE_NAME, parse_line, State::new(), accumulate, reduce2)
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -57,7 +45,7 @@ fn parse_line(line: String) -> Vec<Link> {
             ',' => {
                 x_opt = Some(num.parse().unwrap());
                 num.clear()
-            },
+            }
             ' ' => {
                 if let Some(x) = x_opt {
                     let y: Scale = num.parse().unwrap();
@@ -65,8 +53,8 @@ fn parse_line(line: String) -> Vec<Link> {
                     links.push(Link::new(x, y));
                     x_opt = None
                 }
-            },
-            '-' | '>' => {}, //ignore these
+            }
+            '-' | '>' => {} //ignore these
             _ => num.push(c),
         }
     }
@@ -88,13 +76,13 @@ struct Pos {
 
 impl Pos {
     pub fn new(x: Scale, y: Scale) -> Pos {
-        Pos{x, y}
+        Pos { x, y }
     }
 }
 
 enum Blockage {
     Rock,
-    Sand
+    Sand,
 }
 
 struct State {
@@ -103,7 +91,9 @@ struct State {
 
 impl State {
     pub fn new() -> State {
-        State{ blockages: HashMap::new() }
+        State {
+            blockages: HashMap::new(),
+        }
     }
 }
 
@@ -133,29 +123,32 @@ fn calc_bounds(state: &State) -> (Scale, Scale, Scale, Scale) {
     (min_x, min_y, max_x, max_y)
 }
 
-
 fn output_state(state: &State, file_name: &str) {
     lazy_static! {
         static ref BLOCK: String = String::from("#");
         static ref SAND: String = String::from("o");
         static ref EMPTY: String = String::from(".");
     }
-    File::create(file_name).map(BufWriter::new).map(|mut writer| {
-        let (min_x, min_y, max_x, max_y) = calc_bounds(state);
-        writeln!(writer, "{}-{}x{}-{}", min_x, max_x, min_y, max_y).unwrap();
-        for y in min_y..(max_y + 1) {
-            for x in min_x..(max_x + 1) {
-                let pos = Pos::new(x, y);
-                match state.blockages.get(&pos) {
-                    Some(Blockage::Rock) => writer.write(BLOCK.as_bytes()),
-                    Some(Blockage::Sand) => writer.write(SAND.as_bytes()),
-                    None => writer.write(EMPTY.as_bytes()),
-                }.unwrap();
+    File::create(file_name)
+        .map(BufWriter::new)
+        .map(|mut writer| {
+            let (min_x, min_y, max_x, max_y) = calc_bounds(state);
+            writeln!(writer, "{}-{}x{}-{}", min_x, max_x, min_y, max_y).unwrap();
+            for y in min_y..(max_y + 1) {
+                for x in min_x..(max_x + 1) {
+                    let pos = Pos::new(x, y);
+                    match state.blockages.get(&pos) {
+                        Some(Blockage::Rock) => writer.write(BLOCK.as_bytes()),
+                        Some(Blockage::Sand) => writer.write(SAND.as_bytes()),
+                        None => writer.write(EMPTY.as_bytes()),
+                    }
+                    .unwrap();
+                }
+                writeln!(writer).unwrap();
             }
-            writeln!(writer).unwrap();
-        }
-        writer.flush().unwrap();
-    }).unwrap();
+            writer.flush().unwrap();
+        })
+        .unwrap();
 }
 
 fn accumulate(mut state: State, links: Vec<Link>) -> State {
@@ -172,7 +165,10 @@ fn accumulate(mut state: State, links: Vec<Link>) -> State {
                 state.blockages.insert(Pos::new(x, link.y), Blockage::Rock);
             }
         } else {
-            panic!("Expecting links to have the same x or y: {} -> {}", prev_link, link);
+            panic!(
+                "Expecting links to have the same x or y: {} -> {}",
+                prev_link, link
+            );
         }
         prev_link = link;
     }
@@ -195,15 +191,14 @@ fn reduce1(mut state: State) -> u32 {
     let mut pos = start_pos();
     let mut grains_at_rest: u32 = 0;
     loop {
-        if !move_down(&state, &mut pos) {
-            if !move_down_left(&state, &mut pos) {
-                if !move_down_right(&state, &mut pos) {
-                    //unable to move - new grain at rest and add a blockage
-                    grains_at_rest += 1;
-                    state.blockages.insert(pos, Blockage::Sand);
-                    pos = start_pos();
-                }
-            }
+        if !move_down(&state, &mut pos)
+            && !move_down_left(&state, &mut pos)
+            && !move_down_right(&state, &mut pos)
+        {
+            //unable to move - new grain at rest and add a blockage
+            grains_at_rest += 1;
+            state.blockages.insert(pos, Blockage::Sand);
+            pos = start_pos();
         }
         //check whether this grain is free - if so, we are done
         if pos.y >= escape_y {
@@ -233,26 +228,27 @@ fn reduce2(mut state: State) -> u32 {
             continue;
         }
 
-        if !move_down(&state, &mut pos) {
-            if !move_down_left(&state, &mut pos) {
-                if !move_down_right(&state, &mut pos) {
-                    //unable to move - new grain at rest and add a blockage
-                    grains_at_rest += 1;
-                    state.blockages.insert(pos, Blockage::Sand);
-                    //is source blocked, in which case stop
-                    if pos.y == START_Y {
-                        break;
-                    }
-                    pos = start_pos();
-                }
+        if !move_down(&state, &mut pos)
+            && !move_down_left(&state, &mut pos)
+            && !move_down_right(&state, &mut pos)
+        {
+            //unable to move - new grain at rest and add a blockage
+            grains_at_rest += 1;
+            state.blockages.insert(pos, Blockage::Sand);
+            //is source blocked, in which case stop
+            if pos.y == START_Y {
+                break;
             }
+            pos = start_pos();
         }
     }
 
     let (min_x, _, max_x, _) = calc_bounds(&state);
     //draw the floor
     for x in min_x..(max_x + 1) {
-        state.blockages.insert(Pos::new(x, lowest_rock + 2), Blockage::Rock);
+        state
+            .blockages
+            .insert(Pos::new(x, lowest_rock + 2), Blockage::Rock);
     }
     output_state(&state, "14/reduce2-output.txt");
 
@@ -267,8 +263,8 @@ fn move_down(state: &State, pos: &mut Pos) -> bool {
             //blocked - put it back
             pos.y -= 1;
             false
-        },
-        None => true //ok, it's moved
+        }
+        None => true, //ok, it's moved
     }
 }
 
@@ -282,8 +278,8 @@ fn move_down_left(state: &State, pos: &mut Pos) -> bool {
             pos.x += 1;
             pos.y -= 1;
             false
-        },
-        None => true //ok, it's moved
+        }
+        None => true, //ok, it's moved
     }
 }
 
@@ -297,7 +293,7 @@ fn move_down_right(state: &State, pos: &mut Pos) -> bool {
             pos.x -= 1;
             pos.y -= 1;
             false
-        },
-        None => true //ok, it's moved
+        }
+        None => true, //ok, it's moved
     }
 }
