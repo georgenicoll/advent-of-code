@@ -1,5 +1,4 @@
 use core::panic;
-use std::str::Chars;
 use std::cmp::{min, max};
 
 use crate::utils;
@@ -80,52 +79,29 @@ impl SensorAndBeacon {
         Some((last_x, includes_beacon))
     }
 
-    pub fn coverage(self: &Self, row: Scale) -> Option((Scale, Scale)) {
-        let row_dist = (row - self.sensor_y).abs();
-        let x_dist = self.radius - row_dist;
-        if (x_dist < 0) {
-            return None;
-        }
-        return Some((self.sensor_x - x_dist, self.sensor_x + x_dist))
-    }
+    // pub fn coverage(self: &Self, row: Scale) -> Option<(Scale, Scale)> {
+    //     let row_dist = (row - self.sensor_y).abs();
+    //     let x_dist = self.radius - row_dist;
+    //     if x_dist < 0 {
+    //         return None;
+    //     }
+    //     return Some((self.sensor_x - x_dist, self.sensor_x + x_dist))
+    // }
 
-}
-
-fn skip(chars: &mut Chars<'_>, n: usize) {
-    for _ in 0..n {
-        chars.next();
-    }
-}
-
-fn parse_next_number(chars: &mut Chars<'_>) -> Scale {
-    let mut s = String::new();
-    for c in chars {
-        let finish = match c {
-            ',' | ':' => true,
-            _ => {
-                s.push(c);
-                false
-            },
-        };
-        if finish {
-            break;
-        }
-    }
-    s.parse().unwrap()
 }
 
 fn parse_line(line: String) -> SensorAndBeacon {
     //Example line:
     //Sensor at x=2389280, y=2368338: closest beacon is at x=2127703, y=2732666
     let mut chars = line.chars();
-    skip(&mut chars, 12); //"Sensor at x="
-    let sensor_x = parse_next_number(&mut chars); //will parse up to ","
-    skip(&mut chars, 3); //" y="
-    let sensor_y = parse_next_number(&mut chars); //will parse up to ":"
-    skip(&mut chars, 24); //" closest beacon is at x="
-    let beacon_x = parse_next_number(&mut chars); //will parse up to ","
-    skip(&mut chars, 3);//" y="
-    let beacon_y = parse_next_number(&mut chars);//eof
+    utils::skip(&mut chars, 12); //"Sensor at x="
+    let sensor_x = utils::parse_next_number(&mut chars).unwrap(); //will parse up to ","
+    utils::skip(&mut chars, 3); //" y="
+    let sensor_y = utils::parse_next_number(&mut chars).unwrap(); //will parse up to ":"
+    utils::skip(&mut chars, 24); //" closest beacon is at x="
+    let beacon_x = utils::parse_next_number(&mut chars).unwrap(); //will parse up to ","
+    utils::skip(&mut chars, 3);//" y="
+    let beacon_y = utils::parse_next_number(&mut chars).unwrap();//eof
     SensorAndBeacon::new(sensor_x, sensor_y, beacon_x, beacon_y)
 }
 
