@@ -86,7 +86,7 @@ fn reduce1(state: State) -> i64 {
 
 fn reduce2(state: State) -> i64 {
     //Start with something suitably high that a repeat will have set in
-    let start_num = 10000;
+    let start_num = 5000;
     let start_height = reduce(&state, start_num);
 
     //Now try to find where to repeat (multiples of the number of rocks)
