@@ -236,45 +236,15 @@ fn run_simulation(costs: &Costs, max_steps: usize) -> usize {
 //Prefer geodes over obsidian over clay over ore
 //Prefer robots over resources
 fn sort_steps(s1: &Step, s2: &Step) -> Ordering {
-    let geode_robot_ordering = compare(s2.geode_cracking_robots, s1.geode_cracking_robots);
-    if geode_robot_ordering != Ordering::Equal {
-        return geode_robot_ordering;
-    }
-    let geodes_ordering = compare(s2.geodes, s1.geodes);
-    if geodes_ordering != Ordering::Equal {
-        return geodes_ordering;
-    }
-    let obsidian_robots = compare(s2.obsidian_collecting_robots, s1.obsidian_collecting_robots);
-    if obsidian_robots != Ordering::Equal {
-        return obsidian_robots;
-    }
-    let obsidian_ordering = compare(s2.obsidian, s1.obsidian);
-    if obsidian_ordering != Ordering::Equal {
-        return obsidian_ordering;
-    }
-    let clay_robots = compare(s2.clay_collecting_robots, s1.clay_collecting_robots);
-    if clay_robots != Ordering::Equal {
-        return clay_robots;
-    }
-    let clay_ordering = compare(s2.clay, s1.clay);
-    if clay_ordering != Ordering::Equal {
-        return clay_ordering;
-    }
-    let ore_robots = compare(s2.ore_collecting_robots, s1.ore_collecting_robots);
-    if ore_robots != Ordering::Equal {
-        return ore_robots;
-    }
-    compare(s2.ore, s1.ore)
-}
-
-fn compare(s1: usize, s2: usize) -> Ordering {
-    if s1 < s2 {
-        Ordering::Less
-    } else if s1 > s2 {
-        Ordering::Greater
-    } else {
-        Ordering::Equal
-    }
+    Ordering::Equal
+        .then_with(|| s2.geode_cracking_robots.cmp(&s1.geode_cracking_robots))
+        .then_with(|| s2.geodes.cmp(&s1.geodes))
+        .then_with(|| s2.obsidian_collecting_robots.cmp(&s1.obsidian_collecting_robots))
+        .then_with(|| s2.obsidian.cmp(&s1.obsidian))
+        .then_with(|| s2.clay_collecting_robots.cmp(&s1.clay_collecting_robots))
+        .then_with(|| s2.clay.cmp(&s1.clay))
+        .then_with(|| s2.ore_collecting_robots.cmp(&s1.ore_collecting_robots))
+        .then_with(|| s2.ore.cmp(&s1.ore))
 }
 
 fn build_ore_collecting_robot(costs: &Costs, step: &Step) -> Option<Step> {
