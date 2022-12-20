@@ -126,7 +126,7 @@ fn process2(original_numbers: &Vec<Number>, numbers: &mut Vec<Number>) {
     let len = numbers.len();
 
     for number in original_numbers {
-        let mut current_index = find_index_of(number, numbers);
+        let mut current_index = find_index_of(number, numbers).unwrap();
 
         shift_number_at(numbers, &mut current_index, len, number.number);
     }
@@ -191,11 +191,11 @@ fn find_zero(numbers: &Vec<Number>) -> Option<usize> {
     None
 }
 
-fn find_index_of(number_to_look_for: &Number, numbers: &Vec<Number>) -> usize {
+fn find_index_of(number_to_look_for: &Number, numbers: &Vec<Number>) -> Option<usize> {
     for (index, number) in numbers.iter().enumerate() {
         if number_to_look_for == number {
-            return index;
+            return Some(index);
         }
     }
-    panic!("Didn't find {}", number_to_look_for);
+    None
 }
