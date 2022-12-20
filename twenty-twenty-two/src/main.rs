@@ -20,6 +20,7 @@ mod fifteen;
 mod sixteen;
 mod seventeen;
 mod eighteen;
+mod nineteen;
 
 pub fn old() {
     sandbox::entry_point();
@@ -56,9 +57,11 @@ pub fn old() {
     println!("16b Result is: {}", sixteen::_16b().unwrap());
     println!("17a Result is: {}", seventeen::_17a().unwrap());
     println!("17b Result is: {}", seventeen::_17b().unwrap());
+    println!("18a Result is: {}", eighteen::_18a().unwrap());
+    println!("18b Result is: {}", eighteen::_18b().unwrap());
 }
 
 fn main() {
-    println!("18a Result is: {}", eighteen::_18a().unwrap());
-    println!("18b Result is: {}", eighteen::_18b().unwrap());
+    println!("19a Result is: {}", nineteen::_19a().unwrap());
+    println!("19b Result is: {}", nineteen::_19b().unwrap());
 }
