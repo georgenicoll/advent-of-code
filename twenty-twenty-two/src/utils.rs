@@ -74,24 +74,25 @@ where
 }
 
 
-pub fn output_into_iter<W: fmt::Write, I>(f: &mut W, separator: &str, into_iter: I)
+pub fn output_into_iter<W: fmt::Write, I>(f: &mut W, separator: &str, iter: &mut I)
 where
-    I: IntoIterator,
+    I: Iterator,
     I::Item: Display,
 {
-    let mut iter = into_iter.into_iter();
     if let Some(thing) = iter.next() {
         write!(f, "{}", thing).unwrap();
     }
-    for thing in iter {
-        write!(f, "{}{}", separator, thing).unwrap()
+    let mut next_thing = iter.next();
+    while next_thing.is_some() {
+        write!(f, "{}{}", separator, next_thing.unwrap()).unwrap();
+        next_thing = iter.next();
     }
 }
 
-pub fn output_into_iter_io<W: io::Write, I>(f: W, separator: &str, into_iter: I)
+pub fn output_into_iter_io<W: io::Write, I>(f: W, separator: &str, iter: &mut I)
 where
-    I: IntoIterator,
+    I: Iterator,
     I::Item: Display,
 {
-    output_into_iter(&mut WriteAdapter(f), separator, into_iter)
+    output_into_iter(&mut WriteAdapter(f), separator, iter)
 }

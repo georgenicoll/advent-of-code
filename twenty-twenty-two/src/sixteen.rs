@@ -31,7 +31,7 @@ struct Valve {
 impl fmt::Display for Valve {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{} [{}] -> ", self.id, self.flow_rate).unwrap();
-        utils::output_into_iter(f, "|", &self.tunnels_to);
+        utils::output_into_iter(f, "|", &mut self.tunnels_to.iter());
         write!(f, "")
     }
 }
@@ -133,7 +133,7 @@ impl Visit {
 const MAX_TIME: usize = 30;
 
 fn reduce(state: State) -> u32 {
-    // utils::output_into_iter_io(io::stdout(), ",", state.valves.values().into_iter());
+    // utils::output_into_iter_io(io::stdout(), ",", &state.valves.values().into_iter());
 
     //calculate the maximum number of valves that it makes sense to open
     let max_valves_to_open: usize = state
@@ -248,7 +248,7 @@ fn reduce(state: State) -> u32 {
         }
     }
 
-    utils::output_into_iter_io(io::stdout(), ",", visited_order.into_iter());
+    utils::output_into_iter_io(io::stdout(), ",", &mut visited_order.iter());
     println!("");
     max_total_pressure_released
 }
