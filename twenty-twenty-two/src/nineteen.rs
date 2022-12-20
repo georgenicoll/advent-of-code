@@ -179,7 +179,6 @@ impl Step {
 const MAX_TO_KEEP: usize = 200;
 
 fn run_simulation(costs: &Costs, max_steps: usize) -> usize {
-
     let mut max_opened_geodes: usize = 0;
 
     let this_run_steps: &mut Vec<Step> = &mut Vec::new();
@@ -217,7 +216,12 @@ fn run_simulation(costs: &Costs, max_steps: usize) -> usize {
         this_run_steps.clear();
         //limit number of next run steps
         if next_run_steps.len() > MAX_TO_KEEP {
-            print!("Min {}: {} -> {},", minute, next_run_steps.len(), MAX_TO_KEEP);
+            print!(
+                "Min {}: {} -> {},",
+                minute,
+                next_run_steps.len(),
+                MAX_TO_KEEP
+            );
             next_run_steps.sort_by(sort_steps);
             next_run_steps.truncate(MAX_TO_KEEP);
         }
@@ -229,6 +233,8 @@ fn run_simulation(costs: &Costs, max_steps: usize) -> usize {
     max_opened_geodes
 }
 
+//Prefer geodes over obsidian over clay over ore
+//Prefer robots over resources
 fn sort_steps(s1: &Step, s2: &Step) -> Ordering {
     let geode_robot_ordering = compare(s2.geode_cracking_robots, s1.geode_cracking_robots);
     if geode_robot_ordering != Ordering::Equal {
@@ -261,11 +267,10 @@ fn sort_steps(s1: &Step, s2: &Step) -> Ordering {
     compare(s2.ore, s1.ore)
 }
 
-
 fn compare(s1: usize, s2: usize) -> Ordering {
     if s1 < s2 {
         Ordering::Less
-    } else if s1 > s2  {
+    } else if s1 > s2 {
         Ordering::Greater
     } else {
         Ordering::Equal
