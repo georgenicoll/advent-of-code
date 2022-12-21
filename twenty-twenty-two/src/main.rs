@@ -1,27 +1,27 @@
 #![feature(get_many_mut)]
 #![feature(once_cell)]
-mod sandbox;
-mod utils;
-mod one;
-mod two;
-mod three;
-mod four;
-mod five;
-mod six;
-mod seven;
 mod eight;
-mod nine;
-mod ten;
-mod eleven;
-mod twelve;
-mod thirteen;
-mod fourteen;
-mod fifteen;
-mod sixteen;
-mod seventeen;
 mod eighteen;
+mod eleven;
+mod fifteen;
+mod five;
+mod four;
+mod fourteen;
+mod nine;
 mod nineteen;
+mod one;
+mod sandbox;
+mod seven;
+mod seventeen;
+mod six;
+mod sixteen;
+mod ten;
+mod thirteen;
+mod three;
+mod twelve;
 mod twenty;
+mod two;
+mod utils;
 
 pub fn old() {
     sandbox::entry_point();
@@ -62,9 +62,11 @@ pub fn old() {
     println!("18b Result is: {}", eighteen::_18b().unwrap());
     println!("19a Result is: {}", nineteen::_19a().unwrap());
     println!("19b Result is: {}", nineteen::_19b().unwrap());
+    println!("20a Result is: {}", twenty::_20a().unwrap());
+    println!("20b Result is: {}", twenty::_20b().unwrap());
 }
 
 fn main() {
-    println!("20a Result is: {}", twenty::_20a().unwrap());
-    println!("20b Result is: {}", twenty::_20b().unwrap());
+    println!("16a Result is: {}", sixteen::_16a().unwrap());
+    println!("16b Result is: {}", sixteen::_16b().unwrap());
 }
