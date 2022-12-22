@@ -20,6 +20,7 @@ mod thirteen;
 mod three;
 mod twelve;
 mod twenty;
+mod twentyone;
 mod two;
 mod utils;
 
@@ -64,9 +65,11 @@ pub fn old() {
     println!("19b Result is: {}", nineteen::_19b().unwrap());
     println!("20a Result is: {}", twenty::_20a().unwrap());
     println!("20b Result is: {}", twenty::_20b().unwrap());
+    println!("21a Result is: {}", twentyone::_21a().unwrap());
+    println!("21b Result is: {}", twentyone::_21b().unwrap());
 }
 
 fn main() {
-    println!("16a Result is: {}", sixteen::_16a().unwrap());
-    println!("16b Result is: {}", sixteen::_16b().unwrap());
+    println!("21a Result is: {}", twentyone::_21a().unwrap());
+    println!("21b Result is: {}", twentyone::_21b().unwrap());
 }
