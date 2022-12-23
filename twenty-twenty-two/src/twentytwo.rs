@@ -8,8 +8,8 @@ use either::Either::{self, Left, Right};
 
 use crate::utils;
 
-//const FILE_NAME: &str = "22/input.txt";
-const FILE_NAME: &str = "22/test_input.txt";
+const FILE_NAME: &str = "22/input.txt";
+// const FILE_NAME: &str = "22/test_input.txt";
 
 type Scale = i64;
 
@@ -269,7 +269,7 @@ fn reduce1(mut state: State) -> Scale {
 
 fn reduce2(mut state: State) -> Scale {
     //set up the wraps
-    set_up_wraps(&mut state, true);
+    set_up_wraps(&mut state, FILE_NAME.contains("test"));
     reduce(&mut state, wrapping_function2)
 }
 
@@ -324,7 +324,7 @@ fn move_forward(
     steps: usize,
 ) -> (Coord, Direction) {
     //Output
-    println!("Move Forward: {} {} {} steps", coord, direction, steps);
+    // println!("Move Forward: {} {} {} steps", coord, direction, steps);
 
     let mut current_coord = coord.clone();
     let mut current_direction = direction.clone();
@@ -335,12 +335,12 @@ fn move_forward(
 
         loop {
             //Output
-            println!("candidate: {} {}", candidate_coord, candidate_direction);
+            // println!("candidate: {} {}", candidate_coord, candidate_direction);
             (candidate_coord, candidate_direction) = wrapping_function(state, candidate_coord, candidate_direction);
-            println!("candidate_wrapped: {} {}", candidate_coord, candidate_direction);
+            // println!("candidate_wrapped: {} {}", candidate_coord, candidate_direction);
 
             let tile_state = tile_state(state, &candidate_coord);
-            println!("tile_state: {}", tile_state);
+            // println!("tile_state: {}", tile_state);
             match tile_state {
                 TileState::Open => {
                     current_coord = candidate_coord;
@@ -354,6 +354,13 @@ fn move_forward(
                     let (x_inc, y_inc) = get_x_y_increments(&current_direction);
                     candidate_coord.x += x_inc;
                     candidate_coord.y += y_inc;
+                    if candidate_coord.x < state.bounds.min_x - 1||
+                        candidate_coord.x > state.bounds.max_x + 1 ||
+                        candidate_coord.y < state.bounds.min_y - 1 ||
+                        candidate_coord.y > state.bounds.max_y + 1
+                    {
+                        panic!("Candidate is too out of bounds: {} {}", candidate_coord, candidate_direction);
+                    }
                 }
             }
         }
@@ -444,10 +451,93 @@ fn set_up_wraps(state: &mut State, test_input: bool) {
     if test_input {
         set_up_test_wraps(state);
     } else {
-
+        set_up_main_wraps(state);
     }
 }
 
+/// grid is in the following format
+///  12
+///  3
+/// 45
+/// 6
+///
+/// FIXME:  We should only need to define the mapping once and derive the reverse, i.e.
+/// if 1N -> 3E then we know 3W -> 1S
+fn set_up_main_wraps(state: &mut State) {
+    let side_length = 50;
+    // 3 west to 4 south
+    setup_tile_wraps(state, side_length,
+        1, 1, Direction::West,
+        0, 2, Direction::South, false
+    );
+    // 4 north to 3 east
+    setup_tile_wraps(state, side_length,
+        0, 2, Direction::North,
+        1, 1, Direction::East, false
+    );
+    // 3 east to 2 north
+    setup_tile_wraps(state, side_length,
+        1, 1, Direction::East,
+        2, 0, Direction::North, false
+    );
+    // 2 south to 3 west
+    setup_tile_wraps(state, side_length,
+        2, 0, Direction::South,
+        1, 1, Direction::West, false
+    );
+    // 5 south to 6 west
+    setup_tile_wraps(state, side_length,
+        1, 2, Direction::South,
+        0, 3, Direction::West, false
+    );
+    // 6 east to 5 north
+    setup_tile_wraps(state, side_length,
+        0, 3, Direction::East,
+        1, 2, Direction::North, false
+    );
+    // 2 east to 5 west
+    setup_tile_wraps(state, side_length,
+        2, 0, Direction::East,
+        1, 2, Direction::West, true
+    );
+    // 5 east to 2 west
+    setup_tile_wraps(state, side_length,
+        1, 2, Direction::East,
+        2, 0, Direction::West, true
+    );
+    // 1 west to 4 east
+    setup_tile_wraps(state, side_length,
+        1, 0, Direction::West,
+        0, 2, Direction::East, true
+    );
+    // 4 west to 1 east
+    setup_tile_wraps(state, side_length,
+        0, 2, Direction::West,
+        1, 0, Direction::East, true
+    );
+    // 1 north to 6 east
+    setup_tile_wraps(state, side_length,
+        1, 0, Direction::North,
+        0, 3, Direction::East, false
+    );
+    // 6 west to 1 south
+    setup_tile_wraps(state, side_length,
+        0, 3, Direction::West,
+        1, 0, Direction::South, false
+    );
+    // 2 north to 6 north
+    setup_tile_wraps(state, side_length,
+        2, 0, Direction::North,
+        0, 3, Direction::North, false
+    );
+    // 6 south to 2 south
+    setup_tile_wraps(state, side_length,
+        0, 3, Direction::South,
+        2, 0, Direction::South, false
+    );
+}
+
+/// FIXME:  Convert all of these to use setup_tile_wraps.
 fn set_up_test_wraps(state: &mut State) {
     let side_length = 4;
     //North
@@ -550,6 +640,7 @@ fn set_up_test_wraps(state: &mut State) {
     }
 }
 
+//FIXME:  Do the converse directions automatically to avoid setting up the opposites
 fn setup_tile_wraps(state: &mut State, side_length: Scale,
     from_grid_x: Scale, from_grid_y: Scale, from_direction: Direction,
     to_grid_x: Scale, to_grid_y: Scale, to_direction: Direction,
