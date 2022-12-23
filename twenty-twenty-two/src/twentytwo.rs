@@ -452,43 +452,29 @@ fn set_up_test_wraps(state: &mut State) {
     let side_length = 4;
     //North
     //1 north to 2 south
-    // for x in 0..side_length {
-    //     state.wraps.insert(
-    //         TileWrap::new(side_length * 2 + x, - 1, Direction::North),
-    //         TileWrap::new(side_length - 1 - x, side_length, Direction::South)
-    //     );
-    // }
     setup_tile_wraps(state, side_length,
         3, 0, Direction::North,
         0, 1, Direction::South,
         true
     );
     //2 north to 1 south
-    // for x in 0..side_length {
-    //     state.wraps.insert(
-    //         TileWrap::new(x, side_length - 1, Direction::North),
-    //         TileWrap::new(side_length * 3 - 1 - x, 0, Direction::South)
-    //     );
-    // }
     setup_tile_wraps(state, side_length,
         0, 1, Direction::North,
         2, 0, Direction::South,
         true
     );
     //3 north to 1 east
-    for x in 0..side_length {
-        state.wraps.insert(
-            TileWrap::new(side_length + x, side_length - 1, Direction::North),
-            TileWrap::new(side_length * 2, x, Direction::East)
-        );
-    }
+    setup_tile_wraps(state, side_length,
+        1, 1, Direction::North,
+        2, 0, Direction::East,
+        false
+    );
     //6 north to 4 west
-    for x in 0..side_length {
-        state.wraps.insert(
-            TileWrap::new(side_length * 3 + x, side_length * 2 - 1, Direction::North),
-            TileWrap::new(side_length * 3 - 1, side_length * 2 - 1 - x, Direction::West)
-        );
-    }
+    setup_tile_wraps(state, side_length,
+        3, 2, Direction::North,
+        2, 1, Direction::West,
+        false
+    );
     //South
     //2 south to 5 north
     for x in 0..side_length {
@@ -519,7 +505,7 @@ fn set_up_test_wraps(state: &mut State) {
         );
     }
     //east
-    //2 east to 6 west
+    //1 east to 6 west
     for y in 0..side_length {
         state.wraps.insert(
             TileWrap::new(side_length * 3, y, Direction::East),
