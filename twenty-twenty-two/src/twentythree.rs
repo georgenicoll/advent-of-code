@@ -108,6 +108,7 @@ fn reduce2(mut state: State) -> usize {
 }
 
 fn reduce(state: &mut State, rounds: usize) -> usize {
+    println!();
     output_state(&state);
 
     //Map from proposed position to ProposalDetails
@@ -123,7 +124,7 @@ fn reduce(state: &mut State, rounds: usize) -> usize {
 
         //break if nothing to do
         if proposed_positions.is_empty() {
-            println!("Stopped at round {}: Nothing to do", round);
+            println!("Stopped at round {}: Nothing to do", round + 1);
             break 'outer;
         }
 
