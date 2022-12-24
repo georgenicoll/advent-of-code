@@ -1,6 +1,7 @@
 use crate::utils;
 
-const FILE_NAME: &str = "template/input.txt";
+//const FILE_NAME: &str = "template/input.txt";
+const FILE_NAME: &str = "template/test_input.txt";
 
 pub fn _template_a() -> Result<u32, std::io::Error> {
     utils::process_file(FILE_NAME, parse_line, State::new(), accumulate, reduce)
