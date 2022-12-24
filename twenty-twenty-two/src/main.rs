@@ -1,5 +1,7 @@
 #![feature(get_many_mut)]
 #![feature(once_cell)]
+#![feature(option_result_contains)]
+#![feature(is_some_and)]
 mod eight;
 mod eighteen;
 mod eleven;
@@ -23,6 +25,7 @@ mod twenty;
 mod twentyone;
 mod twentytwo;
 mod twentythree;
+mod twentyfour;
 mod two;
 mod utils;
 
@@ -73,9 +76,11 @@ pub fn old() {
     println!("22b Result is: {}", twentytwo::_22b().unwrap());
     println!("23a Result is: {}", twentythree::_23a().unwrap());
     println!("23b Result is: {}", twentythree::_23b().unwrap());
+    println!("24a Result is: {}", twentyfour::_24a().unwrap());
+    println!("24b Result is: {}", twentyfour::_24b().unwrap());
 }
 
 fn main() {
-    println!("23a Result is: {}", twentythree::_23a().unwrap());
-    println!("23b Result is: {}", twentythree::_23b().unwrap());
+    println!("24a Result is: {}", twentyfour::_24a().unwrap());
+    println!("24b Result is: {}", twentyfour::_24b().unwrap());
 }
