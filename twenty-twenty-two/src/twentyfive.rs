@@ -1,5 +1,5 @@
-use std::fmt::Display;
 use std::collections::VecDeque;
+use std::fmt::Display;
 
 use crate::utils;
 
@@ -8,10 +8,6 @@ const FILE_NAME: &str = "25/input.txt";
 //const FILE_NAME: &str = "25/my_test_input.txt";
 
 pub fn _25a() -> Result<String, std::io::Error> {
-    utils::process_file(FILE_NAME, parse_line, State::new(), accumulate, reduce)
-}
-
-pub fn _25b() -> Result<String, std::io::Error> {
     utils::process_file(FILE_NAME, parse_line, State::new(), accumulate, reduce)
 }
 
@@ -37,7 +33,8 @@ impl Display for SnafuDigit {
 }
 
 fn parse_line(line: String) -> Vec<SnafuDigit> {
-    line.chars().into_iter()
+    line.chars()
+        .into_iter()
         .map(|c| match c {
             '2' => SnafuDigit::Two,
             '1' => SnafuDigit::One,
@@ -45,13 +42,11 @@ fn parse_line(line: String) -> Vec<SnafuDigit> {
             '-' => SnafuDigit::Minus,
             '=' => SnafuDigit::DoubleMinus,
             _ => panic!("Unrecognised snafu digit: {}", c),
-        }).fold(
-        Vec::with_capacity(line.len()),
-        |mut digits, d| {
+        })
+        .fold(Vec::with_capacity(line.len()), |mut digits, d| {
             digits.push(d);
             digits
-        }
-    )
+        })
 }
 
 struct Number {
@@ -61,7 +56,10 @@ struct Number {
 
 impl Number {
     pub fn new(value: i128, snafu_digits: Vec<SnafuDigit>) -> Number {
-        Number { value, snafu_digits }
+        Number {
+            value,
+            snafu_digits,
+        }
     }
 }
 
@@ -79,7 +77,9 @@ struct State {
 
 impl State {
     pub fn new() -> State {
-        State { numbers: Vec::new() }
+        State {
+            numbers: Vec::new(),
+        }
     }
 }
 
@@ -128,7 +128,7 @@ fn convert_into_native(snafu_digits: &Vec<SnafuDigit>) -> i128 {
             SnafuDigit::Minus => multiplier * -1,
             SnafuDigit::DoubleMinus => multiplier * -2,
         };
-    };
+    }
     value
 }
 
@@ -160,14 +160,17 @@ fn convert_into_snafu(value: i128) -> Vec<SnafuDigit> {
         } else {
             let digit = get_snafu_digit(remainder);
             if digit.is_none() {
-                panic!("No snafu digit found for remainder {} at value {}", remainder, value);
+                panic!(
+                    "No snafu digit found for remainder {} at value {}",
+                    remainder, value
+                );
             }
             // println!("digit: {}", digit.as_ref().unwrap());
             result.push_front(digit.unwrap());
             remaining -= remainder;
             previous_was_adjustment = true;
         }
-    };
+    }
     Vec::from(result)
 }
 
@@ -178,6 +181,6 @@ fn get_snafu_digit(value: i128) -> Option<SnafuDigit> {
         0 => Some(SnafuDigit::Zero),
         1 => Some(SnafuDigit::One),
         2 => Some(SnafuDigit::Two),
-        _ => None
+        _ => None,
     }
 }
