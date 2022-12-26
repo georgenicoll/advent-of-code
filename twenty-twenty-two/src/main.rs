@@ -26,6 +26,7 @@ mod twentyone;
 mod twentytwo;
 mod twentythree;
 mod twentyfour;
+mod twentyfive;
 mod two;
 mod utils;
 
@@ -78,9 +79,9 @@ pub fn old() {
     println!("23b Result is: {}", twentythree::_23b().unwrap());
     println!("24a Result is: {}", twentyfour::_24a().unwrap());
     println!("24b Result is: {}", twentyfour::_24b().unwrap());
+    println!("25a Result is: {}", twentyfive::_25a().unwrap());
 }
 
 fn main() {
-    println!("24a Result is: {}", twentyfour::_24a().unwrap());
-    println!("24b Result is: {}", twentyfour::_24b().unwrap());
+    println!("25a Result is: {}", twentyfive::_25a().unwrap());
 }
